@@ -3,103 +3,73 @@
 > 一个普通人在FeiNiu NAS上从零搭建OpenClaw + 自动化推送 + 三机联动的真实经历  
 > 没有理论，全是实战——踩过的坑、修复的方案、当前的稳定架构
 
+[![GitHub stars](https://img.shields.io/github/stars/yadonl/openclaw-fnnas-tutorial?style=social)](https://github.com/yadonl/openclaw-fnnas-tutorial)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 ---
 
 ## 📖 关于这个教程
 
-这不是官方文档的复读，而是一个"自己摸出来的"实战记录。作者在完全不懂的情况下，靠折腾把OpenClaw跑成了自己的员工——能自动采集、定时推送、24小时不关机。
+这不是官方文档的复读，而是一个"自己摸出来的"实战记录。
 
-**总字数：** ~XX,000字  
-**实战经验：** 30+个真实坑  
+作者在完全不懂的情况下，靠折腾把OpenClaw跑成了自己的员工——能自动采集、定时推送、24小时不关机。
+
+**总字数：** ~12,000字  
+**实战经验：** 30+个真实踩坑记录  
 **适合人群：** NAS玩家、折腾党、想用AI自动化的个人用户
 
 ---
 
-# 目录
+## 📚 目录
 
-## 第一篇：环境搭建篇
+### 第一篇：环境搭建篇
 
-### 第1章 飞牛NAS上部署OpenClaw
-- 1.1 飞牛应用商店的一键安装
-- 1.2 装完后的第一件事：检查配置
-- 1.3 飞牛版OpenClaw的特有坑
+| 章节 | 内容 | 适合谁看 |
+|------|------|---------|
+| [第1章：飞牛NAS上部署OpenClaw](docs/01-basics/01-deploy-fnnas.md) | 应用商店安装、配置面板介绍、飞牛版特殊坑 | 刚下载完OpenClaw的新手 |
+| [第2章：打通Telegram通道](docs/01-basics/02-config-telegram.md) | Bot注册、dmPolicy配置、代理设置、常见问题 | 想让Bot回复你的人 |
+| [第3章：模型选择与配置](docs/01-basics/03-model-config.md) | DeepSeek V4 Flash、API Key配置、预算控制 | 想选最省钱方案的人 |
 
-### 第2章 打通Telegram通道
-- 2.1 BotToken配置
-- 2.2 dmPolicy：为什么Bot不回复你
-- 2.3 代理配置：国内环境怎么连Telegram
+### 第二篇：架构篇
 
-### 第3章 模型选择与配置
-- 3.1 DeepSeek V4 Flash：性价比之王
-- 3.2 配置修改的正确姿势（gateway config.patch vs schema）
-- 3.3 maxCostPerDay帮你控制预算
+| 章节 | 内容 | 适合谁看 |
+|------|------|---------|
+| [第4章：三机联动架构](docs/02-core/01-architecture.md) | AI算力机+调度机+NAS的角色分工 | 有多台设备想联动的人 |
 
----
+### 第三篇：网络篇
 
-## 第二篇：架构篇
+| 章节 | 内容 | 适合谁看 |
+|------|------|---------|
+| [第5章：VPS代理搭建](docs/03-network/01-vps-proxy.md) | VPS选购、sing-box配置、Shadowsocks、mihomo代理、血泪教训⚠️ | 想自建代理、替代机场的人 |
+| [第6章：Shadowrocket + iOS快捷指令](docs/03-network/02-shadowrocket.md) | 小火箭配置、出门/在外/回家三个一键切换 | 手机用户 |
 
-### 第4章 三机联动架构设计
-- 4.1 为什么是三台机器不是一台
-- 4.2 各司其职（AI算力机 / 调度机 / NAS存储）
-- 4.3 三机之间的通信方案
+### 第四篇：自动化篇
 
-### 第5章 VPS代理搭建
-- 5.1 RackNerd选购指南
-- 5.2 sing-box + Hysteria2 + Shadowsocks 三协议配置
-- 5.3 mihomo代替机场：自建节点做容器代理
-- 5.4 ⚠️ Tailscale `--accept-routes` 血泪教训（炸了整个网络）
+| 章节 | 内容 | 适合谁看 |
+|------|------|---------|
+| [第7章：n8n工作流迁移实录](docs/02-key-lessons.md) | Code节点禁fs、URL不能用$today、cron调度器bug | 用n8n做自动化的人 |
+| [第8章：自建采集与推送系统](docs/04-auto/01-push-system.md) | collector_daemon持续采集、data_server中转、7个crontab推送 | 想做信息聚合推送的人 |
 
-### 第6章 手机远程访问方案
-- 6.1 Shadowrocket配置（规则精简到2条）
-- 6.2 Tailscale P2P直连回家
-- 6.3 出门/在外/回家三个iOS快捷指令
+### 第五篇：运维篇
+
+| 章节 | 内容 | 适合谁看 |
+|------|------|---------|
+| [第9章：系统健康检查](docs/05-ops/02-health-check.md) | 自动检查清单、服务重启方案、小白避坑 | 担心系统稳定性的人 |
+| [第10章：备份与恢复](docs/05-ops/01-backup.md) | 飞牛备份限制、OpenClaw数据目录、自动脚本、恢复方法 | 怕数据丢了的人 |
 
 ---
 
-## 第三篇：自动化篇
+## 🛠 踩坑合集（快速索引）
 
-### 第7章 n8n工作流迁移实录
-- 7.1 n8n的Code节点沙箱问题（require('fs')禁止）
-- 7.2 data_server中转方案
-- 7.3 n8n cron调度器的坑
-
-### 第8章 自建采集与推送系统
-- 8.1 collector_daemon：持续采集核心
-- 8.2 7个推送工作流详解
-- 8.3 20:30金价修复记（数据缓存bug）
-
-### 第9章 定时任务终极方案
-- 9.1 n8n → 系统crontab迁移
-- 9.2 双cron守护进程问题排查
-- 9.3 @reboot自动启动全栈服务
-
----
-
-## 第四篇：维护篇
-
-### 第10章 健康检查与监控
-- 10.1 系统健康检查清单
-- 10.2 collector_daemon体温监测
-- 10.3 网络连通性自动测试
-
-### 第11章 备份与恢复
-- 11.1 飞牛系统备份（能备份什么/不能备份什么）
-- 11.2 OpenClaw三个核心目录
-- 11.3 自动crontab备份脚本
-
-### 第12章 Skills扩展
-- 12.1 ClawHub技能搜索安装
-- 12.2 已验证的10个实用技能
-- 12.3 Tavily API Key配置
-
----
-
-## 附录
-
-### A. 完整crontab配置
-### B. 飞牛特有问题合集
-### C. 关键文件路径速查表
-### D. VPS一键部署脚本
+| 坑 | 症状 | 原因 | 修复 |
+|----|------|------|------|
+| Tailscale炸网 | 全部服务挂掉 | `--accept-routes` 路由污染 | VPS和NAS路由分离 |
+| n8n Code崩 | 工作流报fs模块禁止 | 沙箱环境限制 | HTTP Request替代 |
+| n8n URL表达式失效 | 报"URL must start with http" | HTTP Request节点不支持JS | Code节点fetch()替代 |
+| n8n定时器失踪 | 推送静默失效 | cron调度器bug | 迁移到系统crontab |
+| Bot不回复 | 发消息没反应 | dmPolicy没配 | 设成"pairing" |
+| 金价显示0 | 数据全零 | data_server缓存旧数据 | 手动触发采集刷新 |
+| Telegram连接失败 | 国内网络不通 | 代理没配置 | 填channels.telegram.proxy |
 
 ---
 
@@ -108,3 +78,9 @@
 - 点个Star ⭐ 让更多人看到
 - 提Issue分享你的踩坑经历
 - Fork后改成你自己的版本
+
+---
+
+## 📝 许可证
+
+[MIT License](LICENSE)
